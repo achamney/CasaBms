@@ -81,10 +81,10 @@
     function refreshData() {
         getData(function(data){
             var lastVolt = data.voltages[data.voltages.length-1];
-            $("#dataContainer").html(`<div class='animate'>${lastVolt.volts}</div>`);
-            $("#voltContainer").html(lastVolt.volts.toFixed(2)+"v");
-            var bar1w = (lastVolt.volts-3)/1.2 * 100;
-            var bar2w = (4.2-lastVolt.volts)/1.2 * 100;
+            $("#dataContainer").html(`<div class='animate'>${lastVolt.v}</div>`);
+            $("#voltContainer").html(lastVolt.v.toFixed(2)+"v");
+            var bar1w = (lastVolt.v-3)/1.2 * 100;
+            var bar2w = (4.2-lastVolt.v)/1.2 * 100;
             $(".bar1").css("width",bar1w+"%");
             $(".bar2").css("width",bar2w+"%");
         });
