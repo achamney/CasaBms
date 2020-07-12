@@ -1,0 +1,95 @@
+<html>
+
+<head>
+		<title>CasaBMS</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		.fa {
+
+			padding: 3px;
+		}
+
+		.fa:hover {
+			color: blue;
+			outline: 1px solid blue;
+		}
+        .animate {
+            border-radius: 3px;
+            animation: highlight 1000ms ease-out;
+        }
+        .barContainer {
+            border: 1px solid #aaa;
+        }
+        .bar {
+            float:left;
+            height: 50px;
+        }
+        .bar1 {
+            background-color:#AFA;
+        }
+        .bar2 {
+            background-color:#FEE;
+        }
+        .clear{
+            float: clear;
+        }
+        @keyframes highlight {
+                0% {
+                    background-color: #AFA;
+                }
+                100% {
+                    background-color: transparent;
+                }
+            }
+	</style>
+</head>
+
+<body>
+	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1 class="display-4">CasaBMS</h1>
+		</div>
+	</div>
+	<div class="container" id="dataContainer">
+		
+    </div>
+    <br/>
+    <div class="container">
+        <div class="barContainer">
+            <div class="bar bar1">3.0v<span style="float: right" id="voltContainer"></span></div>
+            <div class="bar bar2"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+	integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+	crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+	crossorigin="anonymous"></script>
+<script src="common.js"></script>
+<script>
+    window.setInterval(function() {
+        refreshData();
+    }, 5000);
+    function refreshData() {
+        getData(function(data){
+            var lastVolt = data.voltages[data.voltages.length-1];
+            $("#dataContainer").html(`<div class='animate'>${lastVolt.volts}</div>`);
+            $("#voltContainer").html(lastVolt.volts.toFixed(2)+"v");
+            var bar1w = (lastVolt.volts-3)/1.2 * 100;
+            var bar2w = (4.2-lastVolt.volts)/1.2 * 100;
+            $(".bar1").css("width",bar1w+"%");
+            $(".bar2").css("width",bar2w+"%");
+        });
+    }
+    refreshData();
+</script>
+
+</html>
