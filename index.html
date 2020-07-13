@@ -6,44 +6,9 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="style.css" />
 	<style>
-		.fa {
-
-			padding: 3px;
-		}
-
-		.fa:hover {
-			color: blue;
-			outline: 1px solid blue;
-		}
-        .animate {
-            border-radius: 3px;
-            animation: highlight 1000ms ease-out;
-        }
-        .barContainer {
-            border: 1px solid #aaa;
-        }
-        .bar {
-            float:left;
-            height: 50px;
-        }
-        .bar1 {
-            background-color:#AFA;
-        }
-        .bar2 {
-            background-color:#FEE;
-        }
-        .clear{
-            float: clear;
-        }
-        @keyframes highlight {
-                0% {
-                    background-color: #AFA;
-                }
-                100% {
-                    background-color: transparent;
-                }
-            }
+		
 	</style>
 </head>
 
@@ -53,9 +18,6 @@
 			<h1 class="display-4">CasaBMS</h1>
 		</div>
 	</div>
-	<div class="container" id="dataContainer">
-		
-    </div>
     <br/>
     <div class="container">
         <div class="barContainer">
@@ -63,7 +25,8 @@
             <div class="bar bar2"><span style="float: right">4.2v</span></div>
         </div>
         <div class="clear"></div>
-        
+        <canvas id="voltChart"></canvas>
+        <canvas id="tempChart"></canvas>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
@@ -73,21 +36,69 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 	crossorigin="anonymous"></script>
+<script src ="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="common.js"></script>
 <script>
     window.setInterval(function() {
         refreshData();
-    }, 5000);
+    }, 15000);
     function refreshData() {
-        getData(function(data){
+        getData(function(data) {
+            window.allData = data;
             var lastVolt = data.voltages[data.voltages.length-1];
-            $("#dataContainer").html(`<div class='animate'>${lastVolt.v}</div>`);
             $("#voltContainer").html(lastVolt.v.toFixed(2)+"v");
             var bar1w = (lastVolt.v-3)/1.2 * 100;
             var bar2w = (4.2-lastVolt.v)/1.2 * 100;
             $(".bar1").css("width",bar1w+"%");
             $(".bar2").css("width",bar2w+"%");
+            refreshChart("voltChart", data.voltages, "v");
+            refreshChart("tempChart", data.voltages, "t");
         });
+    }
+    function refreshChart(id, data, datum) {
+        var ctx = document.getElementById(id).getContext('2d');
+        var time = new Date(allData._updatedOn);
+        var timeWindow = 30;
+        time = new Date(time - timeWindow * (data.length) * 1000);
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+
+            // The data for our dataset
+            data: {
+                labels: data.map((d, i)=>{ time = new Date(time.getTime() + timeWindow*1000); 
+                    return time.getHours()+":"+formatTime(time.getMinutes());}),
+                datasets: [{
+                    label: (datum == "v" ? "Volts" : "Temperature (C)"),
+                    backgroundColor: function(context){
+                        var index = context.dataIndex;
+                        var value = context.dataset.data[index];
+                        if (datum == "v")
+                            return value<3.8 ? "#BA0" :
+                                    value < 3.4 ? "red" :
+                                    "green";
+                        if (datum == "t")
+                            return value>55 ? "#BA0" :
+                                    value >75 ? "red" :
+                                    "green";
+                        return "#BA0";
+                    },
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: data.map(d=>d[datum])
+                }]
+            },
+
+            // Configuration options go here
+            options: { title: {
+                    display: true,
+                    text: datum == "v" ? "Voltage Over Time" : "Temperature Over Time"
+                },
+                legend: {display: false }
+            }
+        });
+    }
+    function formatTime(t) {
+        return t <= 9 ? "0"+t : t;
     }
     refreshData();
 </script>
