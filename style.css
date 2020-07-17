@@ -16,12 +16,12 @@
 }
 .bar {
     float:left;
-    height: 50px;
+    height: 25px;
 }
-.bar1 {
+.barl {
     background-color:#AFA;
 }
-.bar2 {
+.barr {
     background-color:#FEE;
 }
 .clear{
