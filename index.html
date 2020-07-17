@@ -4,7 +4,8 @@
 		<title>CasaBMS</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="icon.png">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="style.css" />
 	<style>
@@ -28,6 +29,17 @@
         <canvas id="voltChart"></canvas>
         <canvas id="tempChart"></canvas>
     </div>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display:none">
+        <div class="toast-header">
+          <strong class="mr-auto">Error</strong>
+          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="toast-body">
+          Unable to retrieve data.
+        </div>
+      </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -45,12 +57,19 @@
     function refreshData() {
         getData(function(data) {
             window.allData = data;
+            data.voltages.forEach(all=> all.v = all.v.map(v=>v*5/255));
             var lastVolt = data.voltages[data.voltages.length-1];
-            $("#voltContainer").html(lastVolt.v.toFixed(2)+"v");
-            var bar1w = (lastVolt.v-3)/1.2 * 100;
-            var bar2w = (4.2-lastVolt.v)/1.2 * 100;
+            var averageLast = lastVolt.v.reduce((a, b)=>a + b)/6;
+            $("#voltContainer").html(averageLast.toFixed(2)+"v");
+            var bar1w = (averageLast-3)/1.2 * 100;
+            var bar2w = (4.2-averageLast)/1.2 * 100;
             $(".bar1").css("width",bar1w+"%");
             $(".bar2").css("width",bar2w+"%");
+            data.voltages = data.voltages.map(all=> { return {
+                "t": all.t, 
+                "v": all.v.reduce((a, b)=>a + b)/6
+                }
+            });
             refreshChart("voltChart", data.voltages, "v");
             refreshChart("tempChart", data.voltages, "t");
         });
@@ -74,7 +93,7 @@
                         var index = context.dataIndex;
                         var value = context.dataset.data[index];
                         if (datum == "v")
-                            return value<3.8 ? "#BA0" :
+                            return value<3.75 ? "#BA0" :
                                     value < 3.4 ? "red" :
                                     "green";
                         if (datum == "t")
@@ -91,7 +110,7 @@
             // Configuration options go here
             options: { title: {
                     display: true,
-                    text: datum == "v" ? "Voltage Over Time" : "Temperature Over Time"
+                    text: datum == "v" ? "Voltage Over Time" : "Temperature Over Time (C)"
                 },
                 legend: {display: false }
             }

@@ -29,7 +29,8 @@ function getData(retFn) {
     });
 }
 function errorHandle() {
-    alert("Error: Data Not Found. ");
+    //alert("Error: Data Not Found. ");
+    $('.toast').css("display","block").toast('show')
 }
 function updateJsonData(id, data, callback) {
     $.ajax({
