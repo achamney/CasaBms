@@ -8,7 +8,7 @@ int A6PIN = A6;
 int A7PIN = A7; 
 int ledPin = 13;      // select the pin for the LED
 int requestNum = 0;
-float volts[6];
+float volts[7];
 
 void setup() {
   Wire.begin(8); // Initiate the Wire library
@@ -25,9 +25,11 @@ void loop() {
   volts[2] = analogRead(A2PIN) * 5.0 / 1024 * 3 - 0.40;
   volts[3] = analogRead(A3PIN) * 5.0 / 1024 * 4 - 0.76;
   volts[4] = analogRead(A6PIN) * 5.0 / 1024 * 5 - 1.44;
-  volts[5] = analogRead(A7PIN) * 5.0 / 1024 * 6 - 1.1;
+  float pin7v = analogRead(A7PIN) * 5.0 / 1024;
+  volts[5] = pin7v * 6;
+  volts[6] = pin7v * 7;
   // turn the ledPin on
-  for(int i=0;i<6;i++) {
+  for(int i=0;i<7;i++) {
     Serial.println(volts[i]);
   }
   Serial.println();
@@ -48,7 +50,7 @@ void requestEvent()
   Serial.print(sendByte);
   Serial.println("");
   requestNum ++;
-  if (requestNum >= 6) {
+  if (requestNum >= 7) {
     requestNum = 0;
   }
   Wire.write(sendByte);
