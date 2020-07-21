@@ -22,8 +22,38 @@
     <br/>
     <div class="container">
         <div class="barContainer">
-            <div class="bar bar1">3.0v<span style="float: right" id="voltContainer"></span></div>
-            <div class="bar bar2"><span style="float: right">4.2v</span></div>
+            <div class="bar barl barl0">3.0v<span style="float: right" id="voltContainer0"></span></div>
+            <div class="bar barr barr0"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="barContainer">
+            <div class="bar barl barl1">3.0v<span style="float: right" id="voltContainer1"></span></div>
+            <div class="bar barr barr1"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="barContainer">
+            <div class="bar barl barl2">3.0v<span style="float: right" id="voltContainer2"></span></div>
+            <div class="bar barr barr2"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="barContainer">
+            <div class="bar barl barl3">3.0v<span style="float: right" id="voltContainer3"></span></div>
+            <div class="bar barr barr3"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="barContainer">
+            <div class="bar barl barl4">3.0v<span style="float: right" id="voltContainer4"></span></div>
+            <div class="bar barr barr4"><span style="float: right">4.2v</span></div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="barContainer">
+            <div class="bar barl barl5">3.0v<span style="float: right" id="voltContainer5"></span></div>
+            <div class="bar barr barr5"><span style="float: right">4.2v</span></div>
         </div>
         <div class="clear"></div>
         <canvas id="voltChart"></canvas>
@@ -59,12 +89,9 @@
             window.allData = data;
             data.voltages.forEach(all=> all.v = all.v.map(v=>v*5/255));
             var lastVolt = data.voltages[data.voltages.length-1];
-            var averageLast = lastVolt.v.reduce((a, b)=>a + b)/6;
-            $("#voltContainer").html(averageLast.toFixed(2)+"v");
-            var bar1w = (averageLast-3)/1.2 * 100;
-            var bar2w = (4.2-averageLast)/1.2 * 100;
-            $(".bar1").css("width",bar1w+"%");
-            $(".bar2").css("width",bar2w+"%");
+            for (var i=0;i<6;i++) {
+                updateBars(lastVolt, i);
+            }
             data.voltages = data.voltages.map(all=> { return {
                 "t": all.t, 
                 "v": all.v.reduce((a, b)=>a + b)/6
@@ -73,6 +100,14 @@
             refreshChart("voltChart", data.voltages, "v");
             refreshChart("tempChart", data.voltages, "t");
         });
+    }
+    function updateBars(lastVolt, ind) {
+        var lastInd = lastVolt.v[ind];
+        $("#voltContainer"+ind).html(lastInd.toFixed(2)+"v");
+        var bar1w = (lastInd-3)/1.2 * 100;
+        var bar2w = (4.2-lastInd)/1.2 * 100;
+        $(".barl"+ind).css("width",bar1w+"%");
+        $(".barr"+ind).css("width",bar2w+"%");
     }
     function refreshChart(id, data, datum) {
         var ctx = document.getElementById(id).getContext('2d');
