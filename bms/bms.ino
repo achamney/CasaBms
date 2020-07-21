@@ -20,12 +20,12 @@ void setup() {
 
 void loop() {
   // read the value from the sensor:
-  volts[0] = analogRead(A0PIN) * 5.0 / 1024 * 1 - 0.47;
-  volts[1] = analogRead(A1PIN) * 5.0 / 1024 * 2 - 0.4;
-  volts[2] = analogRead(A2PIN) * 5.0 / 1024 * 3 - 0.65;
-  volts[3] = analogRead(A3PIN) * 5.0 / 1024 * 4 - 1.25;
-  volts[4] = analogRead(A6PIN) * 5.0 / 1024 * 5 - 1.9;
-  volts[5] = analogRead(A7PIN) * 5.0 / 1024 * 6 - 2.1;
+  volts[0] = analogRead(A0PIN) * 5.0 / 1024 * 1 - 0.17;
+  volts[1] = analogRead(A1PIN) * 5.0 / 1024 * 2 - 0.30;
+  volts[2] = analogRead(A2PIN) * 5.0 / 1024 * 3 - 0.40;
+  volts[3] = analogRead(A3PIN) * 5.0 / 1024 * 4 - 0.76;
+  volts[4] = analogRead(A6PIN) * 5.0 / 1024 * 5 - 1.44;
+  volts[5] = analogRead(A7PIN) * 5.0 / 1024 * 6 - 1.1;
   // turn the ledPin on
   for(int i=0;i<6;i++) {
     Serial.println(volts[i]);
