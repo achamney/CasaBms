@@ -1,17 +1,18 @@
 window.setInterval(function() {
     refreshData();
 }, 15000);
+var totalNum = 7
 function refreshData() {
     getData(function(data) {
         window.allData = data;
-        data.voltages.forEach(all=> all.v = all.v.map(v=>v*5/255));
+        data.voltages.forEach(all=> all.v = all.v.map(v=>v*5/255 -0.1));
         var lastVolt = data.voltages[data.voltages.length-1];
-        for (var i=0;i<6;i++) {
+        for (var i=0;i<totalNum;i++) {
             updateBars(lastVolt, i);
         }
         data.voltages = data.voltages.map(all=> { return {
             "t": all.t, 
-            "v": all.v.reduce((a, b)=>a + b)/6
+            "v": all.v.reduce((a, b)=>a + b)/totalNum
             }
         });
         refreshChart("voltChart", data.voltages, "v");
