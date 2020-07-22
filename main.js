@@ -5,10 +5,42 @@ var totalNum = 7
 function refreshData() {
     getData(function(data) {
         window.allData = data;
-        data.voltages.forEach(all=> all.v = all.v.map(v=>v*5/255 -0.1));
-        var lastVolt = data.voltages[data.voltages.length-1];
+        var lastVolt = JSON.parse(JSON.stringify(data.voltages[data.voltages.length-1]));
+        for(var all of data.voltages) {
+            for (var i=all.v.length -1; i>=0;i--) {
+                if (all.v[i] < 10) { // remove counting index
+                    all.v.splice(i, 1);
+                }
+            }
+            all.v = all.v.map(v=>v*1.2/255 + 3);
+        }
+        var lastVoltSep = [];
+        for (var i=0;i<totalNum*2;i+=2) { // Fix array so it's sorted
+            if (lastVolt.v[i] <= 6) {
+                lastVoltSep.push({v:lastVolt.v[i+1], i:lastVolt.v[i]});
+            } else 
+            {
+                var ind = lastVolt.v[i+1];
+                if (ind == 0) {
+                    ind = 7;
+                }
+                lastVoltSep.push({v:lastVolt.v[i], i:ind -1});
+            }
+        }
+        lastVoltSep.sort((a, b)=> a.i - b.i > 0 ? 1 : -1);
+        if (lastVoltSep[4].v < 30) {
+            lastVoltSep[4].v += 255;
+        }
+        lastVoltSep.forEach(a=>a.v=a.v*1.2/255 + 3);
+        lastVoltSep[0].v -= 0.15;
+        lastVoltSep[1].v -= 0.13;
+        lastVoltSep[2].v -= 0.11;
+        lastVoltSep[3].v -= 0.03;
+        lastVoltSep[4].v -= 0.35;
+        lastVoltSep[5].v += 0.11;
+        lastVoltSep[6].v -= 0.16;
         for (var i=0;i<totalNum;i++) {
-            updateBars(lastVolt, i);
+            updateBars(lastVoltSep, i);
         }
         data.voltages = data.voltages.map(all=> { return {
             "t": all.t, 
@@ -20,7 +52,7 @@ function refreshData() {
     });
 }
 function updateBars(lastVolt, ind) {
-    var lastInd = lastVolt.v[ind];
+    var lastInd = lastVolt[ind].v;
     $("#voltContainer"+ind).html(lastInd.toFixed(2)+"v");
     var bar1w = (lastInd-3)/1.2 * 100;
     var bar2w = (4.2-lastInd)/1.2 * 100;
