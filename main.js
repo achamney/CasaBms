@@ -1,7 +1,8 @@
 window.setInterval(function() {
     refreshData();
 }, 15000);
-var totalNum = 7
+var totalNum = 7;
+var divideFactor = 1.5;
 function refreshData() {
     getData(function(data) {
         window.allData = data;
@@ -12,7 +13,7 @@ function refreshData() {
                     all.v.splice(i, 1);
                 }
             }
-            all.v = all.v.map(v=>v*1.2/255 + 3);
+            all.v = all.v.map(v=>v*divideFactor/255 + 3);
         }
         var lastVoltSep = [];
         for (var i=0;i<totalNum*2;i+=2) { // Fix array so it's sorted
@@ -31,14 +32,14 @@ function refreshData() {
         if (lastVoltSep[4].v < 30) {
             lastVoltSep[4].v += 255;
         }
-        lastVoltSep.forEach(a=>a.v=a.v*1.2/255 + 3);
-        lastVoltSep[0].v -= 0.15;
-        lastVoltSep[1].v -= 0.13;
+        lastVoltSep.forEach(a=>a.v=a.v*divideFactor/255 + 3);
+        lastVoltSep[0].v -= 0.11;
+        lastVoltSep[1].v -= 0.18;
         lastVoltSep[2].v -= 0.11;
-        lastVoltSep[3].v -= 0.03;
-        lastVoltSep[4].v -= 0.35;
-        lastVoltSep[5].v += 0.11;
-        lastVoltSep[6].v -= 0.16;
+        lastVoltSep[3].v -= 0.24;
+        lastVoltSep[4].v -= 0.05;
+        lastVoltSep[5].v += 0.00;
+        lastVoltSep[6].v -= 0.18;
         for (var i=0;i<totalNum;i++) {
             updateBars(lastVoltSep, i);
         }
