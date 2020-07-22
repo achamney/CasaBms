@@ -43,6 +43,9 @@ function refreshData() {
         for (var i=0;i<totalNum;i++) {
             updateBars(lastVoltSep, i);
         }
+        $("#titleText").html(lastVoltSep
+            .map(a=>a.v)
+            .reduce((a, b) => a + b).toFixed(2));
         data.voltages = data.voltages.map(all=> { return {
             "t": all.t, 
             "v": all.v.reduce((a, b)=>a + b)/totalNum

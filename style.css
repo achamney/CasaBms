@@ -11,6 +11,9 @@
     border-radius: 3px;
     animation: highlight 1000ms ease-out;
 }
+#titleText {
+    color: rgb(2, 155, 2);
+}
 .barContainer {
     border: 1px solid #aaa;
 }
