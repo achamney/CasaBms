@@ -6,45 +6,21 @@ var divideFactor = 1.5;
 function refreshData() {
     getData(function(data) {
         window.allData = data;
-        var lastVolt = JSON.parse(JSON.stringify(data.voltages[data.voltages.length-1]));
+        var lastVolt = data.voltages[data.voltages.length-1];
         for(var all of data.voltages) {
-            for (var i=all.v.length -1; i>=0;i--) {
-                if (all.v[i] < 10) { // remove counting index
-                    all.v.splice(i, 1);
-                }
-            }
             all.v = all.v.map(v=>v*divideFactor/255 + 3);
+            all.v[0] -= 0.11;
+            all.v[1] -= 0.18;
+            all.v[2] -= 0.11;
+            all.v[3] -= 0.24;
+            all.v[4] -= 0.05;
+            all.v[5] += 0.00;
+            all.v[6] -= 0.18;
         }
-        var lastVoltSep = [];
-        for (var i=0;i<totalNum*2;i+=2) { // Fix array so it's sorted
-            if (lastVolt.v[i] <= 6) {
-                lastVoltSep.push({v:lastVolt.v[i+1], i:lastVolt.v[i]});
-            } else 
-            {
-                var ind = lastVolt.v[i+1];
-                if (ind == 0) {
-                    ind = 7;
-                }
-                lastVoltSep.push({v:lastVolt.v[i], i:ind -1});
-            }
-        }
-        lastVoltSep.sort((a, b)=> a.i - b.i > 0 ? 1 : -1);
-        if (lastVoltSep[4].v < 30) {
-            lastVoltSep[4].v += 255;
-        }
-        lastVoltSep.forEach(a=>a.v=a.v*divideFactor/255 + 3);
-        lastVoltSep[0].v -= 0.11;
-        lastVoltSep[1].v -= 0.18;
-        lastVoltSep[2].v -= 0.11;
-        lastVoltSep[3].v -= 0.24;
-        lastVoltSep[4].v -= 0.05;
-        lastVoltSep[5].v += 0.00;
-        lastVoltSep[6].v -= 0.18;
         for (var i=0;i<totalNum;i++) {
-            updateBars(lastVoltSep, i);
+            updateBars(lastVolt, i);
         }
-        $("#titleText").html(lastVoltSep
-            .map(a=>a.v)
+        $("#titleText").html(lastVolt.v
             .reduce((a, b) => a + b).toFixed(2));
         data.voltages = data.voltages.map(all=> { return {
             "t": all.t, 
@@ -56,7 +32,7 @@ function refreshData() {
     });
 }
 function updateBars(lastVolt, ind) {
-    var lastInd = lastVolt[ind].v;
+    var lastInd = lastVolt.v[ind];
     $("#voltContainer"+ind).html(lastInd.toFixed(2)+"v");
     var bar1w = (lastInd-3)/1.2 * 100;
     var bar2w = (4.2-lastInd)/1.2 * 100;
