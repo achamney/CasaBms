@@ -9,13 +9,7 @@ function refreshData() {
         var lastVolt = data.voltages[data.voltages.length-1];
         for(var all of data.voltages) {
             all.v = all.v.map(v=>v*divideFactor/255 + 3);
-            all.v[0] -= 0.11;
-            all.v[1] -= 0.18;
-            all.v[2] -= 0.11;
-            all.v[3] -= 0.24;
-            all.v[4] -= 0.05;
-            all.v[5] += 0.00;
-            all.v[6] -= 0.18;
+            adjustVolts(all);
         }
         for (var i=0;i<totalNum;i++) {
             updateBars(lastVolt, i);
@@ -81,6 +75,39 @@ function refreshChart(id, data, datum) {
 }
 function formatTime(t) {
     return t <= 9 ? "0"+t : t;
+}
+function adjustVolts(obj) {
+    obj.v[0] -= 0.11;
+
+    if (obj.v[1] > 4.0)
+        obj.v[1] -= 0.13;
+    else 
+        obj.v[1] -= 0.18;
+
+    if (obj.v[2] > 4.0)
+        obj.v[2] -= 0.085;
+    else 
+        obj.v[2] -= 0.11;
+
+    if (obj.v[3] > 4.1)
+        obj.v[3] -= 0.22;
+    else 
+        obj.v[3] -= 0.24;
+    
+    if (obj.v[4] > 4.0)
+        obj.v[4] -= 0.07;
+    else 
+        obj.v[4] -= 0.05;
+
+    if (obj.v[5] > 4.0)
+        obj.v[5] -= 0.025;
+    else 
+        obj.v[5] -= 0.00;
+
+    if (obj.v[6] > 4.1)
+        obj.v[6] -= 0.116;
+    else 
+        obj.v[6] -= 0.18;
 }
 const percentColors = [
     { pct: 0.0, color: { r: 0xAA, g: 0x00, b: 0 } },
