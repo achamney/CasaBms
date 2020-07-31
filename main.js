@@ -82,32 +82,32 @@ function adjustVolts(obj) {
     if (obj.v[1] > 4.0)
         obj.v[1] -= 0.13;
     else 
-        obj.v[1] -= 0.18;
+        obj.v[1] -= 0.14;
 
     if (obj.v[2] > 4.0)
         obj.v[2] -= 0.085;
     else 
-        obj.v[2] -= 0.11;
+        obj.v[2] -= 0.13;
 
     if (obj.v[3] > 4.1)
-        obj.v[3] -= 0.22;
+        obj.v[3] -= 0.00;
     else 
-        obj.v[3] -= 0.24;
+        obj.v[3] += 0.00;
     
     if (obj.v[4] > 4.0)
-        obj.v[4] -= 0.07;
+        obj.v[4] -= 0.24;
     else 
-        obj.v[4] -= 0.05;
+        obj.v[4] -= 0.42;
 
     if (obj.v[5] > 4.0)
         obj.v[5] -= 0.025;
     else 
-        obj.v[5] -= 0.00;
+        obj.v[5] -= 0.04;
 
     if (obj.v[6] > 4.1)
         obj.v[6] -= 0.116;
     else 
-        obj.v[6] -= 0.18;
+        obj.v[6] -= 0.17;
 }
 const percentColors = [
     { pct: 0.0, color: { r: 0xAA, g: 0x00, b: 0 } },
