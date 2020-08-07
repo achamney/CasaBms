@@ -90,14 +90,14 @@ function adjustVolts(obj) {
         obj.v[2] -= 0.13;
 
     if (obj.v[3] > 4.1)
-        obj.v[3] -= 0.00;
+        obj.v[3] -= 0.20;
     else 
-        obj.v[3] += 0.00;
+        obj.v[3] -= 0.20;
     
     if (obj.v[4] > 4.0)
-        obj.v[4] -= 0.24;
+        obj.v[4] -= 0.04;
     else 
-        obj.v[4] -= 0.42;
+        obj.v[4] -= 0.04;
 
     if (obj.v[5] > 4.0)
         obj.v[5] -= 0.025;
