@@ -38,7 +38,10 @@ function refreshChart(id, data, datum) {
     var time = new Date(allData._updatedOn);
     var timeWindow = 30;
     time = new Date(time - timeWindow * (data.length) * 1000);
-    var chart = new Chart(ctx, {
+    if (window["chart"+id]) {
+        window["chart"+id].destroy();
+    }
+    window["chart"+id] = new Chart(ctx, {
         // The type of chart we want to create
         type: 'bar',
 
@@ -100,9 +103,9 @@ function adjustVolts(obj) {
         obj.v[4] -= 0.04;
 
     if (obj.v[5] > 4.0)
-        obj.v[5] -= 0.025;
+        obj.v[5] -= 0.4;
     else 
-        obj.v[5] -= 0.04;
+        obj.v[5] -= 0.4;
 
     if (obj.v[6] > 4.1)
         obj.v[6] -= 0.116;
