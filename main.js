@@ -3,6 +3,7 @@ window.setInterval(function() {
 }, 15000);
 var totalNum = 7;
 var divideFactor = 1.5;
+var onoffcount = 1;
 function inverterOn() {
     pingInverterRelay("on");
 }
@@ -12,8 +13,10 @@ function inverterOff() {
 function pingInverterRelay(action) {
     var inverterPass = $("#inverterPass").val();
     localStorage.setItem("inverterPass", inverterPass);
-    $.get(atob("aHR0cDovLzE5Mi4xNjguMS40OjMwMDAv")+action+"?pass="+inverterPass);
-    $.get(atob("aHR0cDovL29tYm0uZGRucy5uZXQ6MzAwMC8")+action+"?pass="+inverterPass);
+    var url1 = atob("aHR0cDovLzE5Mi4xNjguMS40OjMwMDAv")+action+"?pass="+inverterPass+"&nocache="+onoffcount++;
+    var url2 = atob("aHR0cDovL29tYm0uZGRucy5uZXQ6MzAwMC8")+action+"?pass="+inverterPass+"&nocache="+onoffcount++;
+    $("<img src='"+url1+"'/>").appendTo($("body"));
+    $("<img src='"+url2+"'/>").appendTo($("body"));
 }
 $("#inverterPass").val(localStorage.getItem("inverterPass"));
 function refreshData() {
