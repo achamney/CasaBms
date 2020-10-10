@@ -3,6 +3,19 @@ window.setInterval(function() {
 }, 15000);
 var totalNum = 7;
 var divideFactor = 1.5;
+function inverterOn() {
+    pingInverterRelay("on");
+}
+function inverterOff() {
+    pingInverterRelay("off");
+}
+function pingInverterRelay(action) {
+    var inverterPass = $("#inverterPass").val();
+    localStorage.setItem("inverterPass", inverterPass);
+    $.get(atob("aHR0cDovLzE5Mi4xNjguMS40OjMwMDAv")+action+"?pass="+inverterPass);
+    $.get(atob("aHR0cDovL29tYm0uZGRucy5uZXQ6MzAwMC8")+action+"?pass="+inverterPass);
+}
+$("#inverterPass").val(localStorage.getItem("inverterPass"));
 function refreshData() {
     getData(function(data) {
         window.allData = data;
