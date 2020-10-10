@@ -96,7 +96,7 @@ function formatTime(t) {
     return t <= 9 ? "0"+t : t;
 }
 function adjustVolts(obj) {
-    obj.v[0] -= 0.11;
+    obj.v[0] -= 0.03;
 
     if (obj.v[1] > 4.0)
         obj.v[1] -= 0.13;
@@ -114,19 +114,19 @@ function adjustVolts(obj) {
         obj.v[3] -= 0.20;
     
     if (obj.v[4] > 4.0)
-        obj.v[4] -= 0.04;
+        obj.v[4] -= 0.01;
     else 
-        obj.v[4] -= 0.04;
+        obj.v[4] -= 0.01;
 
     if (obj.v[5] > 4.0)
-        obj.v[5] -= 0.4;
+        obj.v[5] -= 0.21;
     else 
-        obj.v[5] -= 0.4;
+        obj.v[5] -= 0.21;
 
     if (obj.v[6] > 4.1)
-        obj.v[6] -= 0.116;
+        obj.v[6] += 0.02;
     else 
-        obj.v[6] -= 0.17;
+        obj.v[6] += 0.02;
 }
 const percentColors = [
     { pct: 0.0, color: { r: 0xAA, g: 0x00, b: 0 } },
